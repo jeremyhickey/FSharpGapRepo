@@ -46,7 +46,7 @@ let functionList = [ squareThisValue; doubleThisValue ]
 //Examples: tuples
 //ints and strings
 let integerTuple = ( 0, -273 )
-let stringTuple = ( "five_potato", "siz_potato", "seven_potato", "peanut_butter_dump_truck" )
+let stringTuple = ( "five_potato", "six_potato", "seven_potato", "peanut_butter_dump_truck" )
 
 //Tuples can have mixed datatypes
 let mixedTypeTuple = ( 1, "zwei", 3 )
@@ -104,5 +104,58 @@ printfn "%A" squareMyList //output: [64; 36; 49; 25; 9; 0; 81]
 //the following returns true if thisNum is even; otherwise false
 let amIEven = List.map (fun thisNum -> thisNum % 2 = 0) intList
 printfn "%A" amIEven //output: [true; true; false; false; false; true; false]
+
+
+//And here's where things get REALLY crazy. . .
+//*******************************************************************
+//Return the value from a function call
+
+//checkFor is a function that takes one argument, item and returns a new function as its value.
+//the returned function takes a list as its argument, and seaches for item in lst
+//returns true or false if present or not, respectively
+
+let checkFor item = 
+    let functionToReturn = fun lst ->
+                           List.exists (fun a -> a = item) lst
+    functionToReturn
+
+let integerList = [ 1; 2; 3; 4; 5; 6; 7 ] 
+let stringListBwah = [ "one"; "two"; "three"]
+
+//The returned function is given the name checkFor7.  
+let checkFor7 = checkFor 7
+
+System.Console.WriteLine(checkFor7 integerList)//output: True
+
+//Same for strings
+let checkForSeven = checkFor "seven"
+
+System.Console.WriteLine(checkForSeven stringListBwah)//output: False
+
+
+//And. . . here's where things "seemingly" break down
+
+//Function compose takes two arguments. Each argument is a function  
+//that takes one argument of the same type. The following declaration 
+//uses lambda expresson syntax. 
+let compose = 
+    fun op1 op2 ->
+        fun n ->
+            op1 (op2 n)
+
+// To clarify what you are returning, use a nested let expression: 
+let compose2 = 
+    fun op1 op2 ->
+        // Use a let expression to build the function that will be returned. 
+        let funToReturn = fun n ->
+                            op1 (op2 n)
+        // Then just return it.
+        funToReturn
+
+// Or, integrating the more concise syntax: 
+let compose3 op1 op2 =
+    let funToReturn = fun n ->
+                        op1 (op2 n)
+    funToReturn
 
 System.Console.ReadLine() |> ignore
