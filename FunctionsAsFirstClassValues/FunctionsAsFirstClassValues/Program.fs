@@ -74,6 +74,35 @@ System.Console.WriteLine((fst functionAndArgTuple2)(snd functionAndArgTuple2))
 //*******************************************************************
 //Pass the value as an argument
 
+//Values of first-class status can be passed as arguments to functions
+let myNumber = 3000
 
+System.Console.WriteLine(squareThisValue myNumber);//output: 9000000
+
+//This function concatenates a string with itself
+let concatMe = fun str -> str + str
+let salutation = "Allo"
+System.Console.WriteLine(concatMe salutation)//output: AlloAllo
+
+//In the following example, two functions and an integer are passed as values to the same function
+
+let applyIt = fun op arg -> op arg
+
+//Semd squareThisValue as function "op" and myNumber for the argument "arg" you want to apply the 
+//function to.
+
+System.Console.WriteLine(applyIt squareThisValue myNumber) //output: 9000000
+
+//This kind of operation is what underlies map or filter operations in functional programming languages
+
+//Mapping example
+//recall the list from before - let intList = [ 8; 6; 7; 5; 3; 0; 9 ]
+let squareMyList = List.map squareThisValue intList
+printfn "%A" squareMyList //output: [64; 36; 49; 25; 9; 0; 81]
+
+//inline definition of the function you want to apply
+//the following returns true if thisNum is even; otherwise false
+let amIEven = List.map (fun thisNum -> thisNum % 2 = 0) intList
+printfn "%A" amIEven //output: [true; true; false; false; false; true; false]
 
 System.Console.ReadLine() |> ignore
