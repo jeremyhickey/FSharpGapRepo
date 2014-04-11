@@ -106,7 +106,6 @@ let amIEven = List.map (fun thisNum -> thisNum % 2 = 0) intList
 printfn "%A" amIEven //output: [true; true; false; false; false; true; false]
 
 
-//And here's where things get REALLY crazy. . .
 //*******************************************************************
 //Return the value from a function call
 
@@ -143,7 +142,7 @@ let compose =
         fun n ->
             op1 (op2 n)
 
-// To clarify what you are returning, use a nested let expression: 
+//To clarify what you are returning, use a nested let expression: 
 let compose2 = 
     fun op1 op2 ->
         // Use a let expression to build the function that will be returned. 
@@ -152,10 +151,70 @@ let compose2 =
         // Then just return it.
         funToReturn
 
-// Or, integrating the more concise syntax: 
+//Or, integrating the more concise syntax: 
 let compose3 op1 op2 =
     let funToReturn = fun n ->
                         op1 (op2 n)
     funToReturn
+
+let doubleAndSquare = compose squareThisValue doubleThisValue
+
+System.Console.WriteLine(doubleAndSquare 3);//output: 36
+
+//Simple guessing game
+let makeGame target =
+    let game = fun guess ->
+        if guess = target then
+            System.Console.WriteLine("Correct!")
+        else
+            System.Console.WriteLine("Wrong.")
+    game
+
+//Play game
+let playGame = makeGame 7
+
+playGame 2
+playGame 9
+playGame 7
+
+//output:   Wrong.
+//          Wrong.
+//          Correct!
+
+
+//*******************************************************************
+//Curried functions
+
+//Currying transforms a function that has more than one parameter into a series of embedded functions,
+//each with a single parameter
+
+let compose4 op1 op2 n = op1 (op2 n)
+
+//The result is a function of one parameter that returns a function of one parameter that returns another
+//function of one parameter as demonstrated here:
+
+let compose4Curried = 
+    fun op1 ->
+        fun op2 ->
+            fun n -> op1 (op2 n)
+
+let doubleAndSquare2 = compose4 squareThisValue doubleThisValue
+
+System.Console.WriteLine(doubleAndSquare2 3)//output: 36
+
+//makeGame curried
+
+let makeGameCurried target guess = 
+    if guess = target then
+        System.Console.WriteLine("Correct!")
+    else
+        System.Console.WriteLine("Wrong")
+
+let playGame2 = makeGameCurried 7
+playGame2 2
+playGame2 9
+playGame2 7
+
+
 
 System.Console.ReadLine() |> ignore
