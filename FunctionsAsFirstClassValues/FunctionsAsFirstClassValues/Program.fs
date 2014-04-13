@@ -1,4 +1,5 @@
-﻿//http://msdn.microsoft.com/en-us/library/dd233158.aspx
+﻿//Working through examples in Functions as First-Class Values tutorial
+//http://msdn.microsoft.com/en-us/library/dd233158.aspx
 
 //Measures of a first-class value:
 //You can bind an identifier to it (give it a name)
@@ -130,7 +131,6 @@ let checkForSeven = checkFor "seven"
 
 System.Console.WriteLine(checkForSeven stringListBwah)//output: False
 
-//And. . . here's where things "seemingly" break down
 
 //Function compose takes two arguments. Each argument is a function  
 //that takes one argument of the same type. The following declaration 
