@@ -59,7 +59,6 @@ let functionTuple = ( squareThisValue, area )
 //You can mix functions with ints, strings and other types in tuples
 let freeForAll = ( 1 , "whointhewhatnow?", area )
 
-
 //You can pull a function out of a tuple an apply it
 let functionAndArgTuple = ( squareThisValue, myInteger )
 
@@ -131,7 +130,6 @@ let checkForSeven = checkFor "seven"
 
 System.Console.WriteLine(checkForSeven stringListBwah)//output: False
 
-
 //And. . . here's where things "seemingly" break down
 
 //Function compose takes two arguments. Each argument is a function  
@@ -145,13 +143,13 @@ let compose =
 //To clarify what you are returning, use a nested let expression: 
 let compose2 = 
     fun op1 op2 ->
-        // Use a let expression to build the function that will be returned. 
+        //Use a let expression to build the function that will be returned. 
         let funToReturn = fun n ->
                             op1 (op2 n)
-        // Then just return it.
+        //Then just return it.
         funToReturn
 
-//Or, integrating the more concise syntax: 
+//Or, more concisely
 let compose3 op1 op2 =
     let funToReturn = fun n ->
                         op1 (op2 n)
