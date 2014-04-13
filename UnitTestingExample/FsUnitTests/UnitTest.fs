@@ -1,4 +1,5 @@
-﻿//http://blogs.msdn.com/b/fsharpteam/archive/2012/09/24/online-project-templates-nuget-and-unit-testing-with-f-in-vs2012.aspx
+﻿//Tests for my Person class using F# MsTest
+//http://blogs.msdn.com/b/fsharpteam/archive/2012/09/24/online-project-templates-nuget-and-unit-testing-with-f-in-vs2012.aspx
 
 namespace UnitTestProject1
 
