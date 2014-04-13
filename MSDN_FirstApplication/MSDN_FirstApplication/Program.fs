@@ -1,4 +1,5 @@
-﻿//http://msdn.microsoft.com/en-us/library/dd233160.aspx
+﻿//Working through Walkthrough: Your First F# Application tutorial
+//http://msdn.microsoft.com/en-us/library/dd233160.aspx
 
 //to define and bind identifiers, use the 'let' keyword
 let anInt = 5

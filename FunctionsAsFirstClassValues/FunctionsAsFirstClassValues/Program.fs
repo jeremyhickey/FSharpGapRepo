@@ -14,7 +14,7 @@
 
 //Examples of naming/defining a string and int
 
-let myString = "erhmahgerd"
+let myString = "Whitespace"
 let myInteger = 100
 
 //Example of naming/defining a function
