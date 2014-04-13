@@ -132,8 +132,130 @@ match List.tryFindIndex isEven list1d with
 | None -> printfn "There is no even value in the list."
 //output: The first even value is at position 8.
 
+//arithmetic operations on lists
+//List.sum - the list element type must support the + operator and have a zero value
+let sumOneToTen = List.sum [1 .. 10] //value is 55
 
+//List.sumBy - computes the sum of a list with an operation applied to it
+let sumOneToTenSquared = List.sumBy (fun elem -> elem*elem) [1 .. 10] //value = 385
 
+//List.average computes the average of the elements of the list.  element type must support division without remainder,
+// so ints won't work
+let averageOfList = List.average [0.0; 1.0; 1.0; 2.0] //value = 1.0
+//let averageOfList2 = List.average [0; 1; 2; 3] //compile time error
+
+//****************************************************
+//operating on list elements: List.iter and variations
+//List.iter allows you to call a function on each item of a list
+let list1 = [1; 2; 3]
+let list2 = [4; 5; 6]
+
+List.iter (fun x -> printfn "List.iter: element is %d" x) list1
+//output:
+//List.iter: element is 1
+//List.iter: element is 2
+//List.iter: element is 3
+
+//List.iteri is like List.iter except the index of each item is passed as an argument to the function called
+List.iteri(fun i x -> printfn "List.iteri: element %d is %d" i x) list1
+
+//output:
+//List.iteri: element 0 is 1
+//List.iteri: element 1 is 2
+//List.iteri: element 2 is 3
+
+//List.iter2 operates on two lists, as does List.iteri2
+List.iter2 (fun x y -> printfn "List.iter2: elements are %d %d" x y) list1 list2
+List.iteri2 (fun i x y ->
+               printfn "List.iteri2: element %d of list1 is %d element %d of list2 is %d"
+                 i x i y)
+            list1 list2
+//output:
+//List.iter2: elements are 1 4
+//List.iter2: elements are 2 5
+//List.iter2: elements are 3 6
+//List.iteri2: element 0 of list1 is 1; element 0 of list2 is 4
+//List.iteri2: element 1 of list1 is 2; element 1 of list2 is 5
+//List.iteri2: element 2 of list1 is 3; element 2 of list2 is 6
+
+//List.map allows you to do the same things as List.iter variations and pull data into a new list
+let listOneToThree = [1; 2; 3]
+let newListMapped = List.map (fun x -> x + 1) listOneToThree //adds one to each element and creates new list
+printfn "%A" newListMapped
+//output: [2; 3; 4]
+
+let listUnATrois = [1; 2; 3]
+let listQuatreASeize = [4; 5; 6]
+let sumList = List.map2 (fun x y -> x + y) listUnATrois listQuatreASeize
+printfn "%A" sumList
+//output: [5; 7; 9]
+
+let newListAddIndex = List.mapi (fun i x -> x + i) listOneToThree //adds index of element to its value and creates new list
+printfn "%A" newListAddIndex
+//output: [1; 3; 5]
+
+//List.collect is like List.map but each element produces a new list and the lists are concatenated together
+let collectList = List.collect (fun x -> [for i in 1..3 -> x * i]) listUnATrois //each element gets multiplied by the for index
+printfn "%A" collectList
+//output: [1; 2; 3; 2; 4; 6; 3; 6; 9]
+
+//List.filter filters the list to satisfy a condition
+let evenOnlyList = List.filter (fun x -> x % 2 = 0) [1; 2; 3; 4; 5; 6]
+//produces [2; 4; 6]
+
+//List.choose combines map and filter, enabling you to select and apply a function to elements matching your criterion
+let listWords = [ "blame"; "It"; "On"; "the"; "rain" ]
+let isCapitalized (string1:string) = System.Char.IsLower string1.[0]
+let results = List.choose (fun elem ->
+    match elem with
+    | elem when isCapitalized elem -> Some(elem + "ses")
+    | _ -> None) listWords
+printfn "%A" results
+//output: ["blameses"; "theses"; "rainses"]
+
+//appending and concatenating lists
+let list1to10 = List.append [1; 2; 3] [4; 5; 6; 7; 8; 9; 10]
+let listResult = List.concat [ [1; 2; 3]; [4; 5; 6]; [7; 8; 9] ]
+List.iter (fun elem -> printf "%d " elem) list1to10 //print each element.  output: 1 2 3 4 5 6 7 8 9 10
+printfn ""
+List.iter (fun elem -> printf "%d " elem) listResult //output: 1 2 3 4 5 6 7 8 9
+printfn ""
+
+//List.fold is like List.iter and List.map only you can pass a second accumulative argument that carries 
+//info throughout and returns the final value of that extra parameter
+let sumListNew list = List.fold (fun acc elem -> acc + elem) 0 list
+printfn "Sum of the elements of list %A is %d." [ 1 .. 3 ] (sumListNew [ 1 .. 3 ])
+//output: Sum of the elements of list [1; 2; 3] is 6.
+
+//List.fold2 can be applied to two lists of equal size
+let sumGreatest list1 list2 = List.fold2 (fun acc elem1 elem2 ->
+                                              acc + max elem1 elem2) 0 list1 list2
+
+let sum = sumGreatest [1; 2; 3] [3; 2; 1]
+printfn "The sum of the greater of each pair of elements in the two lists is %d." sum
+//result = 8
+
+//use List.fold2 to use two lists of different type.  the function executed can use elements of each list for different things
+type Transaction =
+    | Deposit
+    | Withdrawal
+
+let transactionTypes = [Deposit; Deposit; Withdrawal]
+let transactionAmounts = [100.00; 1000.00; 95.00 ]
+let initialBalance = 200.00
+
+let endingBalance = List.fold2 (fun acc elem1 elem2 ->  //acc begins with value of initial balance, elem1 
+                                match elem1 with        //is transactionTypes list and elem2 is transactionAmounts list
+                                | Deposit -> acc + elem2  //if transactionType is Deposit, add
+                                | Withdrawal -> acc - elem2)  //if transactionType is Withdrawal, subtract
+                                initialBalance
+                                transactionTypes
+                                transactionAmounts
+printfn "%f" endingBalance //output: 1205.000000
+
+//conversion between Lists and Sequences or Arrays
+//built-in List.toSeq or List.ofSeq
+//built-in List.toArray or List.ofArray
 
 
 System.Console.ReadLine() |> ignore
